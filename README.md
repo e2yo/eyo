@@ -8,4 +8,32 @@
 
 [![Dependency Status](https://img.shields.io/david/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo) [![devDependency Status](https://img.shields.io/david/dev/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo#info=devDependencies)
 
+Частичное портирование [php-yoficator](https://code.google.com/p/php-yoficator/).
 
+## Особенности
++ восстановление буквы «ё» в русских текстах, вместо написанной «е»;
++ замена «е» на «ё» только в бесспорных случаях;
++ исправление в словах нескольких букв «е», «ё»;
++ корректная обработка сокращений («мед. училище», но не «мёд. училище»);
++ аббревиатуры не обрабатываются.
+
+## Установка
+`npm install eyo -g`
+
+## Командная строка
+`eyo file.txt > file.out.txt`
+`eyo -l file.txt` — вывод слов, где необходима замена
+
+## Node.js
+`npm install eyo`
+
+```
+var eyo = require('eyo');
+console.log(eyo.restore('Лед')); // Лёд
+```
+
+## Ссылки
++ [http://ru.wikipedia.org/wiki/Ёфикатор](https://ru.wikipedia.org/wiki/%D0%81%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D1%80)
+
+## Лицензия
+MIT License
