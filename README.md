@@ -22,6 +22,7 @@
 
 ## Командная строка
 `eyo file.txt > file.out.txt`
+
 `eyo -l file.txt` — вывод слов, где необходима замена
 
 ## Node.js
