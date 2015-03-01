@@ -1,5 +1,5 @@
 Восстановление буквы «ё» в русских текстах
-===========================
+===
 [![NPM version](https://img.shields.io/npm/v/eyo.svg?style=flat)](https://www.npmjs.com/package/eyo)
 [![NPM downloads](https://img.shields.io/npm/dm/eyo.svg?style=flat)](https://www.npmjs.com/package/eyo)
 [![Build Status](https://img.shields.io/travis/hcodes/eyo.svg?style=flat)](https://travis-ci.org/hcodes/eyo)
