@@ -1,7 +1,7 @@
 {
   "name": "eyo",
-  "description": "",
-  "version": "0.2.0",
+  "description": "Restoring the letter «ё» (yo) in russian texts",
+  "version": "0.2.1",
   "author": {
     "name": "Denis Seleznev",
     "email": "hcodes@yandex.ru",
@@ -37,6 +37,7 @@
   },
   "files": [
     "bin",
+    "lib",
     "LICENSE"
   ],
   "devDependencies": {
@@ -44,13 +45,10 @@
     "istanbul": "~0.3.5",
     "jscs": "~1.11.2",
     "jshint": "~2.6.0",
-    "mocha": "~2.1.0",
-    "through": "~2.3.6",
-    "yaspeller": "~1.0.0"
+    "mocha": "~2.1.0"
   },
   "scripts": {
     "test": "npm run-script jshint && npm run-script jscs && npm run-script unit-test-coverage",
-    "yaspeller": "./node_modules/.bin/yaspeller .",
     "jscs": "./node_modules/.bin/jscs .",
     "jshint": "./node_modules/.bin/jshint .",
     "unit-test": "./node_modules/.bin/mocha -u bdd -R spec --recursive test",
