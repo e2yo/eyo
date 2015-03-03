@@ -21,7 +21,9 @@
 `npm install eyo -g`
 
 ## Командная строка
-`eyo file.txt > file.out.txt`
+`eyo file.txt > file.out.txt` — замена «е» на «ё» в файле
+
+`cat file1.txt file2.txt file3.txt | eyo`
 
 `eyo -l file.txt` — вывод слов, где необходима замена
 
