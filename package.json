@@ -1,7 +1,7 @@
 {
   "name": "eyo",
   "description": "Restoring the letter «ё» (yo) in russian texts",
-  "version": "0.2.1",
+  "version": "0.5.0",
   "author": {
     "name": "Denis Seleznev",
     "email": "hcodes@yandex.ru",
@@ -32,8 +32,12 @@
     "node": ">= 0.10"
   },
   "dependencies": {
+    "chalk": "^1.0.0",
+    "charset": "^1.0.0",
     "commander": "~2.6.0",
-    "isutf8": "~1.0.10"
+    "iconv-lite": "^0.4.7",
+    "isutf8": "~1.0.10",
+    "request": "^2.53.0"
   },
   "files": [
     "bin",

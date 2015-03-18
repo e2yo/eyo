@@ -1,27 +1,47 @@
-var fs = require('fs');
-var dict = fs.readFileSync('Yoficator.dic.dat').toString('utf8');
-var res = [];
-var buf = dict.replace(/\r/g, '').split('\n');
-var identify = {};
+var fs = require('fs'),
+    dict = fs.readFileSync('Yoficator.dic.dat').toString('utf8'),
+    buf = dict.split('\n'),
+    resSafe = [],
+    resNotSafe = [],
+    identify = {};
+
 buf.forEach(function(word) {
     word = word.trim();
-    if(word.search(/\*|\?|#/) === -1 && word) {
-        if(identify[word]) {
-            console.log('duplicate: ' + word);
-        }
 
-        if(word.search(/[Ёё]/) === -1) {
-            console.log('not found the letter "ё": ' + word);
-            process.exit(1);
-        }
-
-        res.push(word);
-        identify[word] = true;
+    if(!word) {
+        return;
     }
+
+    if(word.search(/\*|#/) === -1) {
+        if(word.search(/\?/) === -1) {
+            resSafe.push(word);
+        } else {
+            resNotSafe.push(word.replace(/\?/g, ''));
+        }
+    } else {
+        return;
+    }
+
+    if(identify[word]) {
+        console.log('duplicate: ' + word);
+        process.exit(1);
+    }
+
+    if(word.search(/[Ёё]/) === -1) {
+        console.log('not found the letter "ё": ' + word);
+        process.exit(1);
+    }
+
+    identify[word] = true;
 });
 
-res.sort();
+resSafe.sort();
+resNotSafe.sort();
 
 console.log('Yoficator.dic.dat, words: ' + buf.length);
-console.log('result dict, words: ' + res.length);
-fs.writeFileSync('../lib/eyo.json', JSON.stringify(res, null, '  '));
+
+console.log('result dict, safe words: ' + resSafe.length);
+fs.writeFileSync('../lib/eyo_safe.json', JSON.stringify(resSafe, null, '  '));
+
+console.log('result dict, not safe words: ' + resNotSafe.length);
+fs.writeFileSync('../lib/eyo_not_safe.json', JSON.stringify(resNotSafe, null, '  '));
