@@ -54,6 +54,8 @@ describe('restore', function() {
 
 describe('lint', function() {
     it('should return replacement', function() {
-        assert.equal(eyo.lint('«Лед тронулся, господа присяжные заседатели!»').length, 1);
+        var replacements = eyo.lint('«Лед тронулся, господа присяжные заседатели!»');
+        assert.equal(replacements.safe.length, 1);
+        assert.equal(replacements.notSafe.length, 0);
     });
 });

@@ -1,13 +1,9 @@
 #!/usr/bin/env node
 
-var fs = require('fs'),
+var eyo = require('../lib/eyo'),
     chalk = require('chalk'),
-    charset = require('charset'),
-    eyo = require('../lib/eyo'),
     isutf8 = require('isutf8'),
-    iconv = require('iconv-lite'),
     program = require('commander'),
-    request = require('request'),
     EXIT_CODE = {
         DONE: 0,
         NOT_UTF8: 1,
@@ -19,74 +15,95 @@ var fs = require('fs'),
 program
     .version(require('../package.json').version)
     .usage('[options] <file-or-url>')
-    .option('-l, --lint', 'in case some fixes needed returns an error')
+    .option('-l, --lint', 'Search of safe and unsafe replacements')
+    .option('--no-colors', 'Clean output without colors')
     .parse(process.argv);
 
-function execute(text) {
-    console.time('a');
+function printItem(color, item, i) {
+    var before = item.before,
+        after = item.after,
+        newBefore = [],
+        newAfter = [];
+    
+    for(var n = 0; n < before.length; n++) {
+        if(before[n] !== after[n]) {
+            newBefore[n] = chalk.bold(before[n]);
+            newAfter[n] = chalk.bold(after[n]);
+        } else {
+            newBefore[n] = before[n];
+            newAfter[n] = after[n];
+        }
+    }
 
+    console.log((i + 1) + '. ' +
+        newBefore.join('') + ' → ' +
+        newAfter.join('') +
+        (item.count > 1 ? ' (' + item.count + ')' : ''));
+}
+
+function execute(text, resource) {
     var exitCode = EXIT_CODE.DONE;
     if(program.lint) {
         var replacement = eyo.lint(text);
         if(replacement.safe.length) {
-            console.log('Safe replacements:');
-            replacement.safe.forEach(function(item, i) {
-                console.log((i + 1) + '. ' + item[0] + ' => ' + item[1]);
-            });
-
-            if(replacement.notSafe.length) {
-                console.log('');
-            }
+            console.log(chalk.red('[×] ') + resource);
+        } else {
+            console.log(chalk.green('[OK] ') + resource);
+        }
+        
+        if(replacement.safe.length) {
+            console.log(chalk.red('\nReplacements:'));
+            replacement.safe.forEach(printItem.bind(this, 'red'));
 
             exitCode = EXIT_CODE.HAS_REPLACEMENT;
         }
 
         if(replacement.notSafe.length) {
-            console.log('Not safe replacements:');
-            replacement.notSafe.forEach(function(item, i) {
-                console.log((i + 1) + '. ' + item[0] + ' => ' + item[1]);
-            });
+            console.log(chalk.yellow('\nControversial replacements:'));
+            replacement.notSafe.forEach(printItem.bind(this, 'yellow'));
         }
     } else {
         process.stdout.write(eyo.restore(text));
     }
-    console.timeEnd('a');
 
     process.exit(exitCode);
 }
 
 function processFile(file) {
+    var fs = require('fs');
+
     if(fs.existsSync(file) && fs.statSync(file).isFile()) {
-        buf = fs.readFileSync(file);
+        var buf = fs.readFileSync(file);
         if(isutf8(buf)) {
-            execute(buf.toString('utf8'));
+            execute(buf.toString('utf8'), file);
         } else {
-            console.error(file + ': is not utf-8');
+            console.error(chalk.red(file + ': is not UTF-8'));
             process.exit(EXIT_CODE.NOT_UTF8);
         }
     } else {
-        console.error(file + ': no such file');
+        console.error(chalk.red(file + ': no such file'));
         process.exit(EXIT_CODE.NO_SUCH_FILE);
     }
 }
 
 function processUrl(url) {
-    request.get({
-            url: url,
-            encoding: null,
-        },
+    var request = require('request'),
+        iconv = require('iconv-lite'),
+        charset = require('charset');
+
+    request.get({url: url, gzip: true, encoding: null},
         function(error, res, buf) {
             if(error || res.statusCode !== 200) {
-                callback(true, Error(url + ': returns status code is ' + res.statusCode));
+                console.log(chalk.red(url + ': returns status code is ' + res.statusCode));
                 process.exit(EXIT_CODE.ERROR_LOADING);
             }
 
             if(isutf8(buf)) {
-                execute(buf.toString('utf8'));
+                execute(buf.toString('utf8'), url);
             } else {
                 var enc = charset(res.headers['content-type'], buf);
                 if(iconv.encodingExists(enc)) {
-                    execute(iconv.decode(buf, enc));
+                    execute(iconv.decode(buf, enc), url);
                 } else {
                     console.error(enc + ': is unknow charset');
                     process.exit(EXIT_CODE.UNKNOWN_CHARSET);
