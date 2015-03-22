@@ -32,12 +32,12 @@
     "node": ">= 0.10"
   },
   "dependencies": {
-    "chalk": "^1.0.0",
-    "charset": "^1.0.0",
-    "commander": "~2.6.0",
-    "iconv-lite": "^0.4.7",
+    "chalk": "~1.0.0",
+    "charset": "~1.0.0",
+    "commander": "~2.7.1",
+    "iconv-lite": "~0.4.7",
     "isutf8": "~1.0.10",
-    "request": "^2.53.0"
+    "request": "~2.53.0"
   },
   "files": [
     "bin",
@@ -49,7 +49,7 @@
     "istanbul": "~0.3.5",
     "jscs": "~1.11.2",
     "jshint": "~2.6.0",
-    "mocha": "~2.1.0"
+    "mocha": "~2.2.1"
   },
   "scripts": {
     "test": "npm run-script jshint && npm run-script jscs && npm run-script unit-test-coverage",
