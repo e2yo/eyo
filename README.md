@@ -17,6 +17,9 @@
 + корректная обработка сокращений («мед. училище», но не «мёд. училище»);
 + аббревиатуры не обрабатываются.
 
+![eyo](https://raw.githubusercontent.com/hcodes/eyo/master/images/screenshot.png)
+
+
 ## Установка
 `npm install eyo -g`
 
