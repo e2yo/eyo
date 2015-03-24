@@ -25,7 +25,7 @@
 
 ## Командная строка
 `eyo file.txt > file.out.txt` — замена «е» на «ё» в файле.<br/>
-`eyo http://example.com/index.html > file.out.txt` — замена «е» на «ё» на странице сайта.
+`eyo http://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
 
 `cat file1.txt file2.txt file3.txt | eyo`
 
