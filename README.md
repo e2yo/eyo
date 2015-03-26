@@ -42,6 +42,7 @@ console.log(eyo.restore('Лед')); // Лёд
 
 ## Ссылки
 + [http://ru.wikipedia.org/wiki/Ёфикатор](https://ru.wikipedia.org/wiki/%D0%81%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D1%80)
++ [Про букву ё](http://www.gramota.ru/class/istiny/istiny_7_jo/)
 
 ## [Лицензия](./LICENSE)
 MIT License
