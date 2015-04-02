@@ -4,13 +4,8 @@ var eyo = require('../lib/eyo'),
     chalk = require('chalk'),
     isutf8 = require('isutf8'),
     program = require('commander'),
-    EXIT_CODE = {
-        DONE: 0,
-        NOT_UTF8: 1,
-        HAS_REPLACEMENT: 2,
-        NO_SUCH_FILE: 3,
-        UNKNOWN_CHARSET: 4
-    };
+    utils = require('../lib/utils'),
+    exitCodes = utils.exitCodes;
 
 program
     .version(require('../package.json').version)
@@ -24,7 +19,8 @@ function printItem(color, item, i) {
         after = item.after,
         newBefore = [],
         newAfter = [];
-    
+
+    // Diff by letters
     for(var n = 0; n < before.length; n++) {
         if(before[n] !== after[n]) {
             newBefore[n] = chalk.bold(before[n]);
@@ -42,20 +38,20 @@ function printItem(color, item, i) {
 }
 
 function execute(text, resource) {
-    var exitCode = EXIT_CODE.DONE;
+    var exitCode = exitCodes.DONE;
     if(program.lint) {
         var replacement = eyo.lint(text);
         if(replacement.safe.length) {
-            console.log(chalk.red('[×] ') + resource);
+            console.log(chalk.red(utils.errSym) + ' ' + resource);
         } else {
-            console.log(chalk.green('[OK] ') + resource);
+            console.log(chalk.green(utils.okSym) + ' ' + resource);
         }
-        
+
         if(replacement.safe.length) {
             console.log(chalk.red('\nReplacements:'));
             replacement.safe.forEach(printItem.bind(this, 'red'));
 
-            exitCode = EXIT_CODE.HAS_REPLACEMENT;
+            exitCode = exitCodes.HAS_REPLACEMENT;
         }
 
         if(replacement.notSafe.length) {
@@ -78,11 +74,11 @@ function processFile(file) {
             execute(buf.toString('utf8'), file);
         } else {
             console.error(chalk.red(file + ': is not UTF-8'));
-            process.exit(EXIT_CODE.NOT_UTF8);
+            process.exit(exitCodes.NOT_UTF8);
         }
     } else {
         console.error(chalk.red(file + ': no such file'));
-        process.exit(EXIT_CODE.NO_SUCH_FILE);
+        process.exit(exitCodes.NO_SUCH_FILE);
     }
 }
 
@@ -95,7 +91,7 @@ function processUrl(url) {
         function(error, res, buf) {
             if(error || res.statusCode !== 200) {
                 console.log(chalk.red(url + ': returns status code is ' + res.statusCode));
-                process.exit(EXIT_CODE.ERROR_LOADING);
+                process.exit(exitCodes.ERROR_LOADING);
             }
 
             if(isutf8(buf)) {
@@ -106,7 +102,7 @@ function processUrl(url) {
                     execute(iconv.decode(buf, enc), url);
                 } else {
                     console.error(enc + ': is unknow charset');
-                    process.exit(EXIT_CODE.UNKNOWN_CHARSET);
+                    process.exit(exitCodes.UNKNOWN_CHARSET);
                 }
             }
         });
@@ -116,8 +112,7 @@ if(process.stdin.isTTY && !program.args.length) {
     program.help();
 }
 
-var resource = program.args[0],
-    buf = '';
+var resource = program.args[0];
 
 if(process.stdin.isTTY) {
     if(resource.search(/https?:/) !== -1) {
@@ -126,8 +121,9 @@ if(process.stdin.isTTY) {
         processFile(resource);
     }
 } else {
-    process.stdin.setEncoding('utf8');
+    var buf = '';
 
+    process.stdin.setEncoding('utf8');
     process.stdin.on('readable', function() {
         var chunk = process.stdin.read();
         if(chunk !== null) {
