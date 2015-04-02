@@ -14,7 +14,7 @@ var eyo = require('../lib/eyo'),
 
 program
     .version(require('../package.json').version)
-    .usage('[options] <file-or-url>')
+    .usage('[options] <file-or-url>\n\n  Restoring the letter «ё» (yo) in russian texts.')
     .option('-l, --lint', 'Search of safe and unsafe replacements')
     .option('--no-colors', 'Clean output without colors')
     .parse(process.argv);
