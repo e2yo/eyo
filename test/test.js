@@ -45,6 +45,8 @@ var tests = [
 ];
 
 describe('restore', function() {
+    this.timeout(15000);
+
     tests.forEach(function(test) {
         it(test[1], function() {
             assert.equal(eyo.restore(test[0]), test[1]);
@@ -53,6 +55,8 @@ describe('restore', function() {
 });
 
 describe('lint', function() {
+    this.timeout(15000);
+
     it('should return replacement', function() {
         var replacements = eyo.lint('«Лед тронулся, господа присяжные заседатели!»');
         assert.equal(replacements.safe.length, 1);
