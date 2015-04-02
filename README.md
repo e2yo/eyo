@@ -25,12 +25,12 @@
 
 ## Командная строка
 `eyo file.txt > file.out.txt` — замена «е» на «ё» в файле.<br/>
-`eyo http://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
+`eyo https://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
 
 `cat file1.txt file2.txt file3.txt | eyo`
 
-`eyo -l file.txt` — вывод слов для файла, где необходима замена.<br/>
-`eyo -l https://example.com/index.html` — вывод слов для страницы сайта, где необходима замена.
+`eyo --lint file.txt` — вывод слов для файла, где необходима замена.<br/>
+`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима замена.
 
 ## Node.js
 `npm install eyo`
