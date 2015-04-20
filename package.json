@@ -37,7 +37,7 @@
     "commander": "~2.8.0",
     "iconv-lite": "~0.4.7",
     "isutf8": "~1.0.10",
-    "request": "2.x.0"
+    "request": "2.x"
   },
   "files": [
     "bin",
