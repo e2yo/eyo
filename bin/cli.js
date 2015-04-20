@@ -14,6 +14,8 @@ program
     .option('--no-colors', 'Clean output without colors')
     .parse(process.argv);
 
+chalk.enabled = program.colors;
+
 function printItem(color, item, i) {
     var before = item.before,
         after = item.after,
