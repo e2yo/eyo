@@ -10,8 +10,9 @@ var eyo = require('../lib/eyo'),
 program
     .version(require('../package.json').version)
     .usage('[options] <file-or-url>\n\n  Restoring the letter «ё» (yo) in russian texts.')
-    .option('-l, --lint', 'Search of safe and unsafe replacements')
-    .option('--no-colors', 'Clean output without colors')
+    .option('-l, --lint', 'Search of safe and unsafe replacements.')
+    .option('-s, --sort', 'Sort results.')
+    .option('--no-colors', 'Clean output without colors.')
     .parse(process.argv);
 
 chalk.enabled = program.colors;
@@ -42,7 +43,7 @@ function printItem(color, item, i) {
 function execute(text, resource) {
     var exitCode = exitCodes.DONE;
     if(program.lint) {
-        var replacement = eyo.lint(text);
+        var replacement = eyo.lint(text, program.sort);
         if(replacement.safe.length) {
             console.log(chalk.red(utils.errSym) + ' ' + resource);
         } else {
@@ -91,7 +92,12 @@ function processUrl(url) {
 
     request.get({url: url, gzip: true, encoding: null},
         function(error, res, buf) {
-            if(error || res.statusCode !== 200) {
+            if(error) {
+                console.log(chalk.red(error));
+                process.exit(exitCodes.ERROR_LOADING);
+            }
+
+            if(res && res.statusCode !== 200) {
                 console.log(chalk.red(url + ': returns status code is ' + res.statusCode));
                 process.exit(exitCodes.ERROR_LOADING);
             }

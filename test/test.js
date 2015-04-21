@@ -41,6 +41,10 @@ var tests = [
     [
         'Бёрёза, бёреза',
         'Берёза, берёза'
+    ],
+    [
+        'Всем, всем, всем!',
+        'Всем, всем, всем!'
     ]
 ];
 
@@ -61,5 +65,16 @@ describe('lint', function() {
         var replacements = eyo.lint('«Лед тронулся, господа присяжные заседатели!»');
         assert.equal(replacements.safe.length, 1);
         assert.equal(replacements.notSafe.length, 0);
+    });
+    
+    it('should return sorted results', function() {
+        var replacements = eyo.lint('Елка, Елка, Береза, Ежик', true);
+
+        assert.equal(replacements.safe.length, 3);
+        assert.equal(replacements.notSafe.length, 0);
+        
+        assert.equal(replacements.safe[0].before, 'Береза');
+        assert.equal(replacements.safe[1].before, 'Ежик');
+        assert.equal(replacements.safe[2].before, 'Елка');
     });
 });
