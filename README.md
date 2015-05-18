@@ -29,7 +29,7 @@
 
 `cat file1.txt file2.txt file3.txt | eyo`
 
-`eyo --lint file.txt` — вывод слов для файла, где необходима замена.<br/>
+`eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима замена.<br/>
 `eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима замена.
 
 ## Node.js
