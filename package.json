@@ -32,6 +32,7 @@
     "node": ">= 0.10"
   },
   "dependencies": {
+    "async": "^0.9.0",
     "chalk": "~1.0.0",
     "charset": "~1.0.0",
     "commander": "~2.8.0",
@@ -45,9 +46,9 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "chai": "~2.2.0",
+    "chai": "~2.3.0",
     "istanbul": "~0.3.5",
-    "jscs": "~1.12.0",
+    "jscs": "~1.13.1",
     "jshint": "~2.7.0",
     "mocha": "~2.2.1"
   },
