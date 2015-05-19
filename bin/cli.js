@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 var async = require('async'),
-    program = require('commander'),
     chalk = require('chalk'),
+    program = require('commander'),
     utils = require('../lib/utils');
 
 program
@@ -23,7 +23,7 @@ if(process.stdin.isTTY) {
     var tasks = [];
     program.args.forEach(function(resource) {
         tasks.push(function(callback) {
-            if(resource.search(/^https?:/) !== -1) {
+            if(utils.isUrl(resource)) {
                 utils.processUrl(resource, callback);
             } else {
                 utils.processFile(resource, callback);
@@ -46,7 +46,7 @@ if(process.stdin.isTTY) {
             }
         })
         .on('end', function() {
-            utils.processText(buf);
+            utils.processText(buf, 'stdin');
             process.exit();
         });
 }
