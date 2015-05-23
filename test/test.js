@@ -68,13 +68,17 @@ describe('lint', function() {
     });
     
     it('should return sorted results', function() {
-        var replacements = eyo.lint('Елка, Елка, Береза, Ежик', true);
+        var replacements = eyo.lint('елка, Елка, елки, Елка, Береза, Ежик, ежики', true);
 
-        assert.equal(replacements.safe.length, 3);
+        assert.equal(replacements.safe.length, 6);
         assert.equal(replacements.notSafe.length, 0);
         
         assert.equal(replacements.safe[0].before, 'Береза');
         assert.equal(replacements.safe[1].before, 'Ежик');
         assert.equal(replacements.safe[2].before, 'Елка');
+        assert.equal(replacements.safe[3].before, 'ежики');
+        assert.equal(replacements.safe[4].before, 'елка');
+        assert.equal(replacements.safe[5].before, 'елки');
+        
     });
 });
