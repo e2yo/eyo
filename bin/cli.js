@@ -3,6 +3,7 @@
 var async = require('async'),
     chalk = require('chalk'),
     program = require('commander'),
+    eyo = require('../lib/eyo'),
     utils = require('../lib/utils');
 
 program
@@ -10,6 +11,7 @@ program
     .usage('[options] <file-or-url...>\n\n  Restoring the letter «ё» (yo) in russian texts.')
     .option('-l, --lint', 'Search of safe and unsafe replacements.')
     .option('-s, --sort', 'Sort results.')
+    .option('--show-position', 'Show the line number and column number for lint mode.')
     .option('--no-colors', 'Clean output without colors.')
     .parse(process.argv);
 
@@ -24,9 +26,9 @@ if(process.stdin.isTTY) {
     program.args.forEach(function(resource) {
         tasks.push(function(callback) {
             if(utils.isUrl(resource)) {
-                utils.processUrl(resource, callback);
+                eyo._processUrl(resource, callback);
             } else {
-                utils.processFile(resource, callback);
+                eyo._processFile(resource, callback);
             }
         });
     });
@@ -46,7 +48,7 @@ if(process.stdin.isTTY) {
             }
         })
         .on('end', function() {
-            utils.processText(buf, 'stdin');
+            eyo._processText(buf, 'stdin');
             process.exit();
         });
 }
