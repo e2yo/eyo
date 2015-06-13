@@ -24,14 +24,6 @@
 `npm install eyo -g`
 
 ## Командная строка
-`eyo file.txt > file.out.txt` — замена «е» на «ё» в файле.<br/>
-`eyo https://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
-
-`cat file1.txt file2.txt file3.txt | eyo`
-
-`eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима замена.<br/>
-`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима замена.
-
 ```
 Usage: eyo [options] <file-or-url...>
     Restoring the letter «ё» (yo) in russian texts.
@@ -44,6 +36,15 @@ Options:
     --show-position  Show the line number and column number for lint mode
     --no-colors      Clean output without colors
 ```
+
+### Примеры использования
+`eyo file.txt > file.out.txt` — замена «е» на «ё» в файле.<br/>
+`eyo https://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
+
+`cat file1.txt file2.txt file3.txt | eyo`
+
+`eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима замена.<br/>
+`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима замена.
 
 ## Node.js
 `npm install eyo`
