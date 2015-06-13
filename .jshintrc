@@ -1,6 +1,7 @@
 {
     "predef": ["it", "describe"],
     "browser": true,
+    "mocha": true,
     "jquery": true,
     "curly": true,
     "camelcase": true,
