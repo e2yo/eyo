@@ -45,6 +45,10 @@ var tests = [
         'Берёза, берёза'
     ],
     [
+        'Елочка!',
+        'Ёлочка!'
+    ],
+    [
         'Всем, всем, всем!',
         'Всем, всем, всем!'
     ]
@@ -112,6 +116,7 @@ describe('_processFile', function() {
     var program = require('commander'),
         oldExitCode = process.exitCode,
         oldLint = program.lint;
+
     beforeEach(function() {
         program.lint = true;
         process.exitCode = oldExitCode;
@@ -136,9 +141,9 @@ describe('_processFile', function() {
         });
     });
 
-    it('should set exit code HAS_REPLACEMENTS', function(done) {
+    it('should set exit code HAS_REPLACEMENT', function(done) {
         eyo._processFile('test/texts/example_with_yo.txt', function() {
-            assert.equal(process.exitCode, eyo.exitCodes.HAS_REPLACEMENTS);
+            assert.equal(process.exitCode, eyo.exitCodes.HAS_REPLACEMENT);
             done();
         });
     });
@@ -175,24 +180,17 @@ describe('_processUrl', function() {
         });
     });
 
-    /*it('should set exit code UNKNOW_CHARSET', function(done) {
-        eyo._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/unknown_charset', function() {
-            assert.equal(process.exitCode, eyo.exitCodes.ERROR_LOADING);
-            done();
-        });
-    });
-
-    it('should set exit code HAS_REPLACEMENTS', function(done) {
-        eyo._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_with_eyo.txt', function() {
-            assert.equal(process.exitCode, eyo.exitCodes.HAS_REPLACEMENTS);
+    it('should set exit code HAS_REPLACEMENT', function(done) {
+        eyo._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_with_yo.txt', function() {
+            assert.equal(process.exitCode, eyo.exitCodes.HAS_REPLACEMENT);
             done();
         });
     });
 
     it('should not set exit code', function(done) {
-        eyo._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_without_eyo.txt', function() {
+        eyo._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_without_yo.txt', function() {
             assert.equal(process.exitCode, oldExitCode);
             done();
         });
-    });*/
+    });
 });
