@@ -38,13 +38,13 @@ Options:
 ```
 
 ### Примеры использования
-`eyo file.txt > file.out.txt` — замена «е» на «ё» в файле.<br/>
-`eyo https://example.com/index.html > file.out.html` — замена «е» на «ё» на странице сайта.
+`eyo file.txt > file.out.txt` — безопасная замена «е» на «ё» в файле.<br/>
+`eyo https://example.com/index.html > file.out.html` — безопасная замена «е» на «ё» на странице сайта.
 
 `cat file1.txt file2.txt file3.txt | eyo`
 
-`eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима замена.<br/>
-`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима замена.
+`eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима или возможна замена.<br/>
+`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима или возможна замена.
 
 ## Node.js
 `npm install eyo`
