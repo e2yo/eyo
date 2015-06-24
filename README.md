@@ -47,10 +47,13 @@ Options:
 `eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима или возможна замена.
 
 ## Node.js
-`npm install eyo`
+
+Используйте отдельный пакет [`eyo-kernel`](https://www.npmjs.com/package/eyo-kernel) без зависимостей.
+
+`npm install eyo-kernel`
 
 ```
-var eyo = require('eyo');
+var eyo = require('eyo-kernel');
 console.log(eyo.restore('Лед')); // Лёд
 ```
 
