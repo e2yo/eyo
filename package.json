@@ -1,13 +1,12 @@
 {
   "name": "eyo",
-  "description": "Restoring the letter «ё» (yo) in russian texts",
-  "version": "1.2.0",
+  "description": "CLI for restoring the letter «ё» (yo) in russian texts",
+  "version": "2.0.0",
   "author": {
     "name": "Denis Seleznev",
     "email": "hcodes@yandex.ru",
     "url": "https://github.com/hcodes/eyo"
   },
-  "main": "lib/eyo.js",
   "bin": {
     "eyo": "./bin/cli.js"
   },
@@ -36,13 +35,13 @@
     "chalk": "~1.0.0",
     "charset": "~1.0.0",
     "commander": "~2.8.0",
+    "eyo-kernel": "1.x",
     "iconv-lite": "~0.4.7",
     "isutf8": "~1.0.10",
     "request": "2.x"
   },
   "files": [
     "bin",
-    "lib",
     "LICENSE"
   ],
   "devDependencies": {

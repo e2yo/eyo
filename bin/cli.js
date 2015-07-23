@@ -3,8 +3,7 @@
 var async = require('async'),
     chalk = require('chalk'),
     program = require('commander'),
-    eyo = require('../lib/eyo'),
-    utils = require('../lib/utils');
+    utils = require('./utils');
 
 program
     .version(require('../package.json').version)
@@ -25,10 +24,10 @@ if(process.stdin.isTTY) {
     var tasks = [];
     program.args.forEach(function(resource) {
         tasks.push(function(callback) {
-            if(utils.isUrl(resource)) {
-                eyo._processUrl(resource, callback);
+            if(resource.search(/^https?:/) !== -1) {
+                utils._processUrl(resource, callback);
             } else {
-                eyo._processFile(resource, callback);
+                utils._processFile(resource, callback);
             }
         });
     });
@@ -48,7 +47,7 @@ if(process.stdin.isTTY) {
             }
         })
         .on('end', function() {
-            eyo._processText(buf, 'stdin');
+            utils._processText(buf, 'stdin');
             process.exit();
         });
 }
