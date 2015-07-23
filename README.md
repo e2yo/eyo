@@ -8,8 +8,6 @@
 
 [![Dependency Status](https://img.shields.io/david/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo) [![devDependency Status](https://img.shields.io/david/dev/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo#info=devDependencies)
 
-Частичное портирование [php-yoficator](https://code.google.com/p/php-yoficator/).
-
 ## Особенности
 + проверка и восстановление буквы «ё» в русских текстах, вместо написанной «е»;
 + замена «е» на «ё» только в бесспорных случаях;
@@ -57,10 +55,8 @@ var eyo = require('eyo-kernel');
 console.log(eyo.restore('Лед')); // Лёд
 ```
 
-## Eyo в Yaspeller
-В [yaspeller](https://github.com/hcodes/yaspeller/) добавлена поддержка eyo.<br/>Используйте опцию [`--check-yo`](https://github.com/hcodes/yaspeller/#--check-yo) в командной строке `yaspeller -l ru --check-yo my_file.txt` или параметр [`checkYo: true`](https://github.com/hcodes/yaspeller/#configuration) в конфигурационном файле. 
-
 ## Ссылки
++ [eyo-kernel](https://www.npmjs.com/package/eyo-kernel) отдельный пакет для ёфикации без зависимостей
 + [https://ru.wikipedia.org/wiki/Ёфикатор](https://ru.wikipedia.org/wiki/%D0%81%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D1%80)
 + [Про букву ё](http://www.gramota.ru/class/istiny/istiny_7_jo/)
 + [Поиск опечаток в тексте](https://github.com/hcodes/yaspeller)
