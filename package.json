@@ -31,8 +31,8 @@
     "node": ">= 0.10"
   },
   "dependencies": {
-    "async": "~1.2.1",
-    "chalk": "~1.0.0",
+    "async": "~1.4.0",
+    "chalk": "~1.1.0",
     "charset": "~1.0.0",
     "commander": "~2.8.0",
     "eyo-kernel": "1.x",
@@ -45,8 +45,8 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "chai": "~3.0.0",
-    "istanbul": "~0.3.5",
+    "chai": "~3.2.0",
+    "istanbul": "~0.3.17",
     "jscs": "~1.13.1",
     "jshint": "~2.8.0",
     "mocha": "~2.2.1"
