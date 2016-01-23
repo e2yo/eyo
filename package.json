@@ -11,12 +11,7 @@
     "eyo": "./bin/cli.js"
   },
   "homepage": "https://github.com/hcodes/eyo",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/hcodes/eyo/blob/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/hcodes/eyo.git"
@@ -28,16 +23,16 @@
     "ёфикация"
   ],
   "engines": {
-    "node": ">= 0.10"
+    "node": ">= 0.12"
   },
   "dependencies": {
-    "async": "~1.4.0",
+    "async": "~1.5.2",
     "chalk": "~1.1.0",
     "charset": "~1.0.0",
-    "commander": "~2.8.0",
+    "commander": "~2.9.0",
     "eyo-kernel": "1.x",
     "iconv-lite": "~0.4.7",
-    "isutf8": "~1.0.10",
+    "isutf8": "~1.0.11",
     "request": "2.x"
   },
   "files": [
@@ -45,11 +40,11 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "chai": "~3.2.0",
-    "istanbul": "~0.3.17",
-    "jscs": "~1.13.1",
-    "jshint": "~2.8.0",
-    "mocha": "~2.2.1"
+    "chai": "~3.4.1",
+    "istanbul": "~0.4.2",
+    "jscs": "~2.8.0",
+    "jshint": "~2.9.1",
+    "mocha": "~2.3.4"
   },
   "scripts": {
     "test": "npm run-script jshint && npm run-script jscs && npm run-script unit-test-coverage",

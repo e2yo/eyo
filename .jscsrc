@@ -1,8 +1,17 @@
 {
     "excludeFiles": [
         ".*",
+        "benchmark",
+        "build",
+        "dist",
+        "examples",
         "coverage",
-        "node_modules"
+        "libs",
+        "node_modules",
+        "test",
+        "site",
+        "src/start.js",
+        "src/end.js"
     ],
     "requireCurlyBraces": ["if", "else", "for", "while", "do"],
     "requireSpaceAfterKeywords": ["do", "else"],
@@ -22,9 +31,13 @@
     "disallowMultipleLineBreaks": true,
     "disallowKeywordsOnNewLine": ["else"],
     "requireLineFeedAtFileEnd": true,
-    "validateJSDoc": {
+    "validateIndentation": 4,
+    "jsDoc": {
         "checkParamNames": true,
         "checkRedundantParams": true,
+        "checkReturnTypes": true,
+        "checkRedundantReturns": true,
+        "checkTypes": "strictNativeCase",
         "requireParamTypes": true
     }
 }
