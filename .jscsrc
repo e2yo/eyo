@@ -1,21 +1,11 @@
 {
     "excludeFiles": [
         ".*",
-        "benchmark",
-        "build",
-        "dist",
-        "examples",
         "coverage",
-        "libs",
-        "node_modules",
-        "test",
-        "site",
-        "src/start.js",
-        "src/end.js"
+        "node_modules"
     ],
     "requireCurlyBraces": ["if", "else", "for", "while", "do"],
-    "requireSpaceAfterKeywords": ["do", "else"],
-    "disallowSpaceAfterKeywords": ["if", "for", "while", "switch"],
+    "requireSpaceAfterKeywords": ["if", "else", "for", "while", "switch", "do"],
     "disallowSpacesInFunctionExpression": {
         "beforeOpeningRoundBrace": true
     },

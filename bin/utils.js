@@ -1,33 +1,38 @@
-// jshint maxlen:1024
-var fs = require('fs'),
-    chalk = require('chalk'),
-    isutf8 = require('isutf8'),
-    program = require('commander'),
-    request = require('request'),
-    iconv = require('iconv-lite'),
-    charset = require('charset'),
-    eyoKernel = require('eyo-kernel'),
-    isWin = process.platform === 'win32',
-    okSym = isWin ? '[OK]' : '✓',
-    errSym = isWin ? '[ERR]' : '✗',
-    exitCodes = {
-        NOT_UTF8: 21,
-        HAS_REPLACEMENT: 22,
-        NO_SUCH_FILE: 23,
-        UNKNOWN_CHARSET: 24
-    },
-    isFirst = true;
+'use strict';
+
+const chalk = require('chalk');
+const charset = require('charset');
+const eyoKernel = require('eyo-kernel');
+const fs = require('fs');
+const iconv = require('iconv-lite');
+const isutf8 = require('isutf8');
+const program = require('commander');
+const request = require('request');
+
+const isWin = process.platform === 'win32';
+const okSym = isWin ? '[OK]' : '✓';
+const errSym = isWin ? '[ERR]' : '✗';
+
+const exitCodes = {
+    NOT_UTF8: 21,
+    HAS_REPLACEMENT: 22,
+    NO_SUCH_FILE: 23,
+    UNKNOWN_CHARSET: 24
+};
+
+let isFirst = true;
     
 function printItem(color, item, i) {
-    var before = item.before,
-        after = item.after,
-        newBefore = [],
-        newAfter = [],
-        info = [];
+    const before = item.before;
+    const after = item.after;
+    const newBefore = [];
+    const newAfter = [];
+    const info = [];
+    const pos = item.position[0];
 
     // Diff by letters
-    for(var n = 0; n < before.length; n++) {
-        if(before[n] !== after[n]) {
+    for (let n = 0; n < before.length; n++) {
+        if (before[n] !== after[n]) {
             newBefore[n] = chalk.bold(before[n]);
             newAfter[n] = chalk.bold(after[n]);
         } else {
@@ -36,12 +41,9 @@ function printItem(color, item, i) {
         }
     }
 
-    if(program.showPosition) {
-        info.push('line: ' + item.position[0].line);
-        info.push('col: ' + item.position[0].column);
-    }
+    info.push(pos.line + ':' + pos.column);
 
-    if(item.count > 1) {
+    if (item.count > 1) {
         info.push('count: ' + item.count);
     }
 
@@ -60,27 +62,27 @@ module.exports = {
      * @param {string} text
      * @param {string} resource
      */
-    _processText: function(text, resource) {
-        var n = isFirst ? '' : '\n';
+    _processText(text, resource) {
+        const n = isFirst ? '' : '\n';
 
-        if(program.lint) {
-            var replacement = eyoKernel.lint(text, program.sort);
-            if(replacement.safe.length) {
+        if (program.lint) {
+            const replacement = eyoKernel.lint(text, program.sort);
+            if (replacement.safe.length) {
                 console.log(n + chalk.red(errSym) + ' ' + resource);
             } else {
                 console.log(n + chalk.green(okSym) + ' ' + resource);
             }
 
-            if(replacement.safe.length) {
+            if (replacement.safe.length) {
                 console.log(chalk.yellow('Safe replacements:'));
                 replacement.safe.forEach(printItem.bind(this, 'red'));
 
-                if(!process.exitCode) {
+                if (!process.exitCode) {
                     process.exitCode = exitCodes.HAS_REPLACEMENT;
                 }
             }
 
-            if(replacement.notSafe.length) {
+            if (replacement.notSafe.length) {
                 console.log(chalk.red((replacement.safe.length ? '\n' : '') + 'Not safe replacements:'));
                 replacement.notSafe.forEach(printItem.bind(this, 'yellow'));
             }
@@ -96,10 +98,10 @@ module.exports = {
      * @param {string} file
      * @param {Function} callback
      */
-    _processFile: function(file, callback) {
-        if(fs.existsSync(file) && fs.statSync(file).isFile()) {
-            var buf = fs.readFileSync(file);
-            if(isutf8(buf)) {
+    _processFile(file, callback) {
+        if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+            const buf = fs.readFileSync(file);
+            if (isutf8(buf)) {
                 this._processText(buf.toString('utf8'), file);
             } else {
                 console.error(chalk.red(file + ': is not UTF-8.'));
@@ -118,29 +120,29 @@ module.exports = {
      * @param {string} url
      * @param {Function} callback
      */
-    _processUrl: function(url, callback) {
-        var that = this;
-        request.get({url: url, gzip: true, encoding: null},
+    _processUrl(url, callback) {
+        request.get(
+            {url, gzip: true, encoding: null},
             function(error, res, buf) {
-                if(error) {
+                if (error) {
                     console.log(chalk.red(error));
                     process.exitCode = exitCodes.ERROR_LOADING;
                 }
 
-                if(res && res.statusCode !== 200) {
-                    console.log(chalk.red(url + ': returns status code is ' + res.statusCode + '.'));
+                if (res && res.statusCode !== 200) {
+                    console.log(chalk.red(`${url}: returns status code is ${res.statusCode}.`));
                     process.exitCode = exitCodes.ERROR_LOADING;
                     callback();
 
                     return;
                 }
 
-                if(isutf8(buf)) {
-                    that._processText(buf.toString('utf8'), url);
+                if (isutf8(buf)) {
+                    this._processText(buf.toString('utf8'), url);
                 } else {
-                    var enc = charset(res.headers['content-type'], buf);
-                    if(iconv.encodingExists(enc)) {
-                        that._processText(iconv.decode(buf, enc), url);
+                    const enc = charset(res.headers['content-type'], buf);
+                    if (iconv.encodingExists(enc)) {
+                        this._processText(iconv.decode(buf, enc), url);
                     } else {
                         console.error(enc + ': is unknown charset.');
                         process.exitCode = exitCodes.UNKNOWN_CHARSET;
@@ -148,7 +150,7 @@ module.exports = {
                 }
 
                 callback();
-            });
+            }.bind(this));
     },
-    exitCodes: exitCodes
+    exitCodes
 };
