@@ -1,14 +1,14 @@
-// jshint maxlen:1024
+'use strict';
 
-var assert = require('chai').assert,
-    utils = require('../bin/utils');
+const assert = require('chai').assert;
+const utils = require('../bin/utils');
 
 describe('_processFile', function() {
     this.timeout(15000);
 
-    var program = require('commander'),
-        oldExitCode = process.exitCode,
-        oldLint = program.lint;
+    const program = require('commander');
+    const oldExitCode = process.exitCode;
+    const oldLint = program.lint;
 
     beforeEach(function() {
         program.lint = true;
@@ -52,9 +52,9 @@ describe('_processFile', function() {
 describe('_processUrl', function() {
     this.timeout(15000);
 
-    var program = require('commander'),
-        oldExitCode = process.exitCode,
-        oldLint = program.lint;
+    const program = require('commander');
+    const oldExitCode = process.exitCode;
+    const oldLint = program.lint;
 
     beforeEach(function() {
         program.lint = true;
