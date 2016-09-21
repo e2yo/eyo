@@ -31,6 +31,7 @@
     "charset": "~1.0.0",
     "commander": "~2.9.0",
     "eyo-kernel": "~1.0.2",
+    "exit": "^0.1.2",
     "iconv-lite": "~0.4.7",
     "isutf8": "~2.0.0",
     "request": "~2.75.0"
