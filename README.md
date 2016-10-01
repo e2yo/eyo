@@ -30,7 +30,6 @@ Options:
     -V, --version    output the version number
     -l, --lint       Search of safe and unsafe replacements
     -s, --sort       Sort results
-    --show-position  Show the line number and column number for lint mode
     --no-colors      Clean output without colors
 ```
 
