@@ -7,7 +7,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/hcodes/eyo.svg?style=flat)](https://coveralls.io/r/hcodes/eyo)
 [![Dependency Status](https://img.shields.io/david/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo)
 
-![eyo](https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png)
+<img src="https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png" align="right" alt="eyo" width="200" height="200" />
 
 ## Особенности
 + проверка и восстановление буквы «ё» в русских текстах, вместо написанной «е»;
