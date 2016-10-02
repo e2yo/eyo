@@ -7,6 +7,8 @@
 [![Coverage Status](https://img.shields.io/coveralls/hcodes/eyo.svg?style=flat)](https://coveralls.io/r/hcodes/eyo)
 [![Dependency Status](https://img.shields.io/david/hcodes/eyo.svg?style=flat)](https://david-dm.org/hcodes/eyo)
 
+![eyo](https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png)
+
 ## Особенности
 + проверка и восстановление буквы «ё» в русских текстах, вместо написанной «е»;
 + замена «е» на «ё» только в бесспорных случаях;
