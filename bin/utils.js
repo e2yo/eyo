@@ -2,7 +2,15 @@
 
 const chalk = require('chalk');
 const charset = require('charset');
-const eyoKernel = require('eyo-kernel');
+
+const Eyo = require('eyo-kernel');
+
+const safeEyo = new Eyo();
+safeEyo.dictionary.loadSafeSync();
+
+const notSafeEyo = new Eyo();
+notSafeEyo.dictionary.loadNotSafeSync();
+
 const fs = require('fs');
 const iconv = require('iconv-lite');
 const isutf8 = require('isutf8');
@@ -12,6 +20,7 @@ const request = require('request');
 const isWin = process.platform === 'win32';
 const okSym = isWin ? '[OK]' : '✓';
 const errSym = isWin ? '[ERR]' : '✗';
+const chalkDiff = isWin ? chalk.underline : chalk.bold;
 
 const exitCodes = {
     NOT_UTF8: 21,
@@ -28,13 +37,13 @@ function printItem(color, item, i) {
     const newBefore = [];
     const newAfter = [];
     const info = [];
-    const pos = item.position[0];
+    const pos = Array.isArray(item.position) ? item.position[0] : item.position;
 
     // Diff by letters
     for (let n = 0; n < before.length; n++) {
         if (before[n] !== after[n]) {
-            newBefore[n] = chalk.bold(before[n]);
-            newAfter[n] = chalk.bold(after[n]);
+            newBefore[n] = chalkDiff(before[n]);
+            newAfter[n] = chalkDiff(after[n]);
         } else {
             newBefore[n] = before[n];
             newAfter[n] = after[n];
@@ -66,28 +75,29 @@ module.exports = {
         const n = isFirst ? '' : '\n';
 
         if (program.lint) {
-            const replacement = eyoKernel.lint(text, program.sort);
-            if (replacement.safe.length) {
+            const safeReplacement = safeEyo.lint(text, program.sort);
+            if (safeReplacement.length) {
                 console.log(n + chalk.red(errSym) + ' ' + resource);
             } else {
                 console.log(n + chalk.green(okSym) + ' ' + resource);
             }
 
-            if (replacement.safe.length) {
+            if (safeReplacement.length) {
                 console.log(chalk.yellow('Safe replacements:'));
-                replacement.safe.forEach(printItem.bind(this, 'red'));
+                safeReplacement.forEach(printItem.bind(this, 'red'));
 
                 if (!process.exitCode) {
                     process.exitCode = exitCodes.HAS_REPLACEMENT;
                 }
             }
 
-            if (replacement.notSafe.length) {
-                console.log(chalk.red((replacement.safe.length ? '\n' : '') + 'Not safe replacements:'));
-                replacement.notSafe.forEach(printItem.bind(this, 'yellow'));
+            const notSafeReplacement = notSafeEyo.lint(text, program.sort);
+            if (notSafeReplacement.length) {
+                console.log(chalk.red((notSafeReplacement.length ? '\n' : '') + 'Not safe replacements:'));
+                notSafeReplacement.forEach(printItem.bind(this, 'yellow'));
             }
         } else {
-            process.stdout.write(eyoKernel.restore(text));
+            process.stdout.write(safeEyo.restore(text));
         }
 
         isFirst = false;
