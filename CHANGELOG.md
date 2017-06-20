@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0
+- Обновлены зависимости в package.json.
+- Перевод пакета `eyo-kernel` на API v2.
+
 ## v3.0.2
 - Мелкие правки в README.md
 
