@@ -50,7 +50,7 @@ Options:
 
 `npm install eyo-kernel`
 
-```
+```js
 var eyo = require('eyo-kernel');
 console.log(eyo.restore('Лед')); // Лёд
 ```
