@@ -48,8 +48,8 @@
   },
   "scripts": {
     "test": "npm run-script eslint && npm run-script unit-test-coverage",
-    "eslint": "./node_modules/.bin/eslint .",
-    "unit-test": "./node_modules/.bin/mocha -u bdd -R spec --recursive test",
-    "unit-test-coverage": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- -u bdd -R spec --recursive test"
+    "eslint": "eslint .",
+    "unit-test": "mocha -u bdd -R spec --recursive test",
+    "unit-test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -u bdd -R spec --recursive test"
   }
 }
