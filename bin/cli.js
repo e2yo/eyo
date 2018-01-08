@@ -2,7 +2,6 @@
 
 'use strict';
 
-const async = require('async');
 const chalk = require('chalk');
 const exit = require('exit');
 const program = require('commander');
@@ -14,30 +13,17 @@ program
     .option('-l, --lint', 'Search of safe and unsafe replacements')
     .option('-s, --sort', 'Sort results')
     .option('--no-colors', 'Clean output without colors')
+    .option('--stdin', 'Process text provided on <STDIN>')
+    .option('--stdin-filename <file>', 'Specify filename to process STDIN as')
     .parse(process.argv);
 
 chalk.enabled = program.colors;
 
-if (process.stdin.isTTY && !program.args.length) {
+if (!program.stdin && !program.args.length) {
     program.help();
 }
 
-if (process.stdin.isTTY) {
-    const tasks = [];
-    program.args.forEach(function(resource) {
-        tasks.push(function(callback) {
-            if (resource.search(/^https?:/) !== -1) {
-                utils._processUrl(resource, callback);
-            } else {
-                utils._processFile(resource, callback);
-            }
-        });
-    });
-
-    async.series(tasks, function() {
-        exit(process.exitCode);
-    });
-} else {
+if (program.stdin) {
     let text = '';
 
     process.stdin
@@ -49,7 +35,19 @@ if (process.stdin.isTTY) {
             }
         })
         .on('end', function() {
-            utils._processText(text, 'stdin');
+            utils._processText(text, program.stdinFilename || 'stdin');
             exit(process.exitCode);
         });
+} else {
+    Promise.all(program.args.map(resource => {
+        return new Promise(resolve => {
+            if (resource.search(/^https?:/) !== -1) {
+                utils._processUrl(resource, resolve);
+            } else {
+                utils._processFile(resource, resolve);
+            }
+        });
+    })).then(() => {
+        exit(process.exitCode);
+    });
 }

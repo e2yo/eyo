@@ -28,21 +28,24 @@ Usage: eyo [options] <file-or-url...>
     Restoring the letter «ё» (yo) in russian texts.
 
 Options:
-    -h, --help       output usage information
-    -V, --version    output the version number
-    -l, --lint       Search of safe and unsafe replacements
-    -s, --sort       Sort results
-    --no-colors      Clean output without colors
+    -h, --help                  Output usage information
+    -V, --version               Output the version number
+    -l, --lint                  Search of safe and unsafe replacements
+    -s, --sort                  Sort results
+        --stdin                 Process text provided on <STDIN>
+        --stdin-filename <file> Specify filename to process STDIN as
+        --no-colors             Clean output without colors
 ```
 
 ### Примеры использования
 `eyo file.txt > file.out.txt` — безопасная замена «е» на «ё» в файле.<br/>
 `eyo https://example.com/index.html > file.out.html` — безопасная замена «е» на «ё» на странице сайта.
 
-`cat file1.txt file2.txt file3.txt | eyo`
-
 `eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима или возможна замена.<br/>
 `eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима или возможна замена.
+
+`cat file1.txt file2.txt file3.txt | eyo --stdin > output.txt`<br/>
+`cat file1.txt | eyo --stdin --stdin-filename file1.txt`
 
 ## Node.js
 
