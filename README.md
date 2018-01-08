@@ -28,11 +28,11 @@ Usage: eyo [options] <file-or-url...>
     Restoring the letter «ё» (yo) in russian texts.
 
 Options:
-    -h, --help       output usage information
-    -V, --version    output the version number
+    -h, --help       Output usage information
+    -V, --version    Output the version number
     -l, --lint       Search of safe and unsafe replacements
     -s, --sort       Sort results
-    --no-colors      Clean output without colors
+        --no-colors  Clean output without colors
 ```
 
 ### Примеры использования
