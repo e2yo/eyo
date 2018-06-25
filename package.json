@@ -1,7 +1,7 @@
 {
   "name": "eyo",
   "description": "CLI for restoring the letter «ё» (yo) in russian texts",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": {
     "name": "Denis Seleznev",
     "email": "hcodes@yandex.ru",
@@ -26,14 +26,14 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "chalk": "^2.3.0",
+    "chalk": "^2.4.1",
     "charset": "^1.0.1",
-    "commander": "^2.12.2",
+    "commander": "^2.15.1",
     "exit": "^0.1.2",
-    "eyo-kernel": "^2.2.1",
-    "iconv-lite": "^0.4.19",
-    "isutf8": "^2.0.1",
-    "request": "^2.83.0"
+    "eyo-kernel": "^2.3.1",
+    "iconv-lite": "^0.4.23",
+    "isutf8": "^2.0.2",
+    "request": "^2.87.0"
   },
   "files": [
     "bin",
@@ -41,9 +41,9 @@
   ],
   "devDependencies": {
     "chai": "^4.1.2",
-    "eslint": "^4.15.0",
+    "eslint": "^5.0.0",
     "istanbul": "^0.4.5",
-    "mocha": "^4.1.0"
+    "mocha": "^5.2.0"
   },
   "scripts": {
     "test": "npm run-script eslint && npm run-script unit-test-coverage",
