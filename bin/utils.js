@@ -91,10 +91,12 @@ module.exports = {
                 }
             }
 
-            const notSafeReplacement = notSafeEyo.lint(text, program.sort);
-            if (notSafeReplacement.length) {
-                console.log(chalk.red((notSafeReplacement.length ? '\n' : '') + 'Not safe replacements:'));
-                notSafeReplacement.forEach(printItem.bind(this, 'yellow'));
+            if (!program.onlySafe) {
+                const notSafeReplacement = notSafeEyo.lint(text, program.sort);
+                if (notSafeReplacement.length) {
+                    console.log(chalk.red((notSafeReplacement.length ? '\n' : '') + 'Not safe replacements:'));
+                    notSafeReplacement.forEach(printItem.bind(this, 'yellow'));
+                }
             }
         } else {
             process.stdout.write(safeEyo.restore(text));
