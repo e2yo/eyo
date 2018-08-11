@@ -11,6 +11,7 @@ program
     .version(require('../package.json').version)
     .usage('[options] <file-or-url...>\n\n  Restoring the letter “ё” (yo) in russian texts.')
     .option('-l, --lint', 'Search of safe and unsafe replacements')
+    .option('--only-safe', 'Output only safe replacements')
     .option('-s, --sort', 'Sort results')
     .option('--no-colors', 'Clean output without colors')
     .option('--stdin', 'Process text provided on <STDIN>')

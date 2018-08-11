@@ -32,6 +32,7 @@ Options:
     -V, --version               Output the version number
     -l, --lint                  Search of safe and unsafe replacements
     -s, --sort                  Sort results
+        --only-safe             Output only safe replacements
         --stdin                 Process text provided on <STDIN>
         --stdin-filename <file> Specify filename to process STDIN as
         --no-colors             Clean output without colors
