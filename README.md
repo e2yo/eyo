@@ -54,11 +54,6 @@ Options:
 
 `npm install eyo-kernel`
 
-```js
-var eyo = require('eyo-kernel');
-console.log(eyo.restore('Лед')); // Лёд
-```
-
 ## Ссылки
 + [Ёфикация в браузере](https://hcodes.github.io/eyo-browser/)
 + [eyo-kernel](https://www.npmjs.com/package/eyo-kernel) — отдельный пакет для ёфикации без зависимостей
