@@ -11,8 +11,9 @@ program
     .version(require('../package.json').version)
     .usage('[options] <file-or-url...>\n\n  Restoring the letter “ё” (yo) in russian texts.')
     .option('-l, --lint', 'Search of safe and unsafe replacements')
-    .option('--only-safe', 'Output only safe replacements')
+    .option('-i, --in-place', 'Write files in place.')
     .option('-s, --sort', 'Sort results')
+    .option('--only-safe', 'Output only safe replacements')
     .option('--no-colors', 'Clean output without colors')
     .option('--stdin', 'Process text provided on <STDIN>')
     .option('--stdin-filename <file>', 'Specify filename to process STDIN as')
@@ -29,26 +30,29 @@ if (program.stdin) {
 
     process.stdin
         .setEncoding('utf8')
-        .on('readable', function() {
+        .on('readable', () => {
             const chunk = process.stdin.read();
             if (chunk !== null) {
                 text += chunk;
             }
         })
-        .on('end', function() {
+        .on('end', () => {
             utils._processText(text, program.stdinFilename || 'stdin');
             exit(process.exitCode);
         });
 } else {
-    Promise.all(program.args.map(resource => {
+    Promise.all(utils.expandGlobArgs(program.args).map(resource => {
         return new Promise(resolve => {
-            if (resource.search(/^https?:/) !== -1) {
+            if (utils.isUrl(resource)) {
                 utils._processUrl(resource, resolve);
             } else {
                 utils._processFile(resource, resolve);
             }
         });
     })).then(() => {
+        exit(process.exitCode);
+    }).catch((e) => {
+        console.error(chalk.red(e));
         exit(process.exitCode);
     });
 }
