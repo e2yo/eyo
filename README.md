@@ -31,6 +31,7 @@ Options:
     -h, --help                  Output usage information
     -V, --version               Output the version number
     -l, --lint                  Search of safe and unsafe replacements
+    -i, --in-place              Write files in place.
     -s, --sort                  Sort results
         --only-safe             Output only safe replacements
         --stdin                 Process text provided on <STDIN>
@@ -39,11 +40,14 @@ Options:
 ```
 
 ### Примеры использования
-`eyo file.txt > file.out.txt` — безопасная замена «е» на «ё» в файле.<br/>
-`eyo https://example.com/index.html > file.out.html` — безопасная замена «е» на «ё» на странице сайта.
+`eyo file.txt > file.out.txt` — безопасная замена «е» на «ё».<br/>
+`eyo https://example.com/index.html > file.out.html` — безопасная замена «е» на «ё» на странице сайта.<br/>
+
+`eyo -i README.md` — файл `README.md` будет перезаписан с безопасной заменой «е» на «ё».<br/>
+`eyo -i "*.md"` — файлы с расширением `.md`  будут перезаписаны с безопасной заменой «е» на «ё».<br/>
 
 `eyo --lint file1.txt file2.txt` — вывод слов для файлов, где необходима или возможна замена.<br/>
-`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима или возможна замена.
+`eyo --lint http://habrahabr.ru` — вывод слов для страницы сайта, где необходима или возможна замена.<br/>
 
 `cat file1.txt file2.txt file3.txt | eyo --stdin > output.txt`<br/>
 `cat file1.txt | eyo --stdin --stdin-filename file1.txt`

@@ -2,6 +2,7 @@
 
 const assert = require('chai').assert;
 const utils = require('../bin/utils');
+const exitCodes = require('../bin/exit-codes');
 
 describe('_processFile', function() {
     this.timeout(15000);
@@ -22,21 +23,21 @@ describe('_processFile', function() {
 
     it('should set exit code NO_SUCH_FILE', function(done) {
         utils._processFile('unknown.txt', function() {
-            assert.equal(process.exitCode, utils.exitCodes.NO_SUCH_FILE);
+            assert.equal(process.exitCode, exitCodes.NO_SUCH_FILE);
             done();
         });
     });
 
     it('should set exit code NOT_UTF8', function(done) {
         utils._processFile('test/texts/win1251.txt', function() {
-            assert.equal(process.exitCode, utils.exitCodes.NOT_UTF8);
+            assert.equal(process.exitCode, exitCodes.NOT_UTF8);
             done();
         });
     });
 
     it('should set exit code HAS_REPLACEMENT', function(done) {
         utils._processFile('test/texts/example_with_yo.txt', function() {
-            assert.equal(process.exitCode, utils.exitCodes.HAS_REPLACEMENT);
+            assert.equal(process.exitCode, exitCodes.HAS_REPLACEMENT);
             done();
         });
     });
@@ -68,14 +69,14 @@ describe('_processUrl', function() {
 
     it('should set exit code ERROR_LOADING', function(done) {
         utils._processUrl('https://raw.githubusercontent.com/hcodes/utils/master/test/texts/unknown.txt', function() {
-            assert.equal(process.exitCode, utils.exitCodes.ERROR_LOADING);
+            assert.equal(process.exitCode, exitCodes.ERROR_LOADING);
             done();
         });
     });
 
     it('should set exit code HAS_REPLACEMENT', function(done) {
         utils._processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_with_yo.txt', function() {
-            assert.equal(process.exitCode, utils.exitCodes.HAS_REPLACEMENT);
+            assert.equal(process.exitCode, exitCodes.HAS_REPLACEMENT);
             done();
         });
     });
