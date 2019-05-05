@@ -43,13 +43,13 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "eslint": "^5.8.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.2.0"
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0"
   },
   "scripts": {
     "test": "npm run-script eslint && npm run-script unit-test-coverage",
     "eslint": "eslint .",
-    "unit-test": "mocha -u bdd -R spec --recursive test",
-    "unit-test-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -u bdd -R spec --recursive test"
+    "unit-test": "mocha",
+    "unit-test-coverage": "nyc mocha"
   }
 }
