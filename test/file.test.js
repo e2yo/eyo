@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('chai').assert;
-const { processFile } = require('../bin/utils');
-const exitCodes = require('../bin/exit-codes');
+const { processFile } = require('../lib/utils');
+const exitCodes = require('../lib/exit-codes');
 
 describe('processFile', function() {
     this.timeout(15000);

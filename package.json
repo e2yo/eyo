@@ -8,7 +8,7 @@
     "url": "https://github.com/e2yo/eyo"
   },
   "bin": {
-    "eyo": "./bin/cli.js"
+    "eyo": "./bin/eyo.js"
   },
   "homepage": "https://github.com/e2yo/eyo",
   "license": "MIT",
@@ -38,6 +38,9 @@
   },
   "files": [
     "bin",
+    "lib",
+    "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "devDependencies": {
