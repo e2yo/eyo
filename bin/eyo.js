@@ -11,7 +11,7 @@ const {
     processUrl,
     processFile,
     processText,
-} = require('./utils');
+} = require('../lib/utils');
 
 program
     .version(require('../package.json').version)
