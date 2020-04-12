@@ -3,9 +3,20 @@
 const chalk = require('chalk');
 const charset = require('charset');
 const glob = require('glob');
-const exitCodes = require('./exit-codes');
-
+const fs = require('fs');
+const iconv = require('iconv-lite');
+const isutf8 = require('isutf8');
+const program = require('commander');
+const fetch = require('node-fetch');
 const Eyo = require('eyo-kernel');
+
+const exitCodes = require('./exit-codes');
+const {
+    diffColor,
+    okSymbol,
+    errorSymbol,
+    warningSymbol,
+} = require('./symbols');
 
 const safeEyo = new Eyo();
 safeEyo.dictionary.loadSafeSync();
@@ -13,20 +24,7 @@ safeEyo.dictionary.loadSafeSync();
 const notSafeEyo = new Eyo();
 notSafeEyo.dictionary.loadNotSafeSync();
 
-const fs = require('fs');
-const iconv = require('iconv-lite');
-const isutf8 = require('isutf8');
-const program = require('commander');
-const request = require('request');
-
-const isWin = process.platform === 'win32';
-const okSym = isWin ? '[OK]' : '✓';
-const errSym = isWin ? '[ERR]' : '✗';
-const chalkDiff = isWin ? chalk.underline : chalk.bold;
-
-let isFirst = true;
-
-function printItem(color, item, i) {
+function printItem(item, i, isError) {
     const before = item.before;
     const after = item.after;
     const newBefore = [];
@@ -37,8 +35,8 @@ function printItem(color, item, i) {
     // Diff by letters
     for (let n = 0; n < before.length; n++) {
         if (before[n] !== after[n]) {
-            newBefore[n] = chalkDiff(before[n]);
-            newAfter[n] = chalkDiff(after[n]);
+            newBefore[n] = diffColor(before[n]);
+            newAfter[n] = diffColor(after[n]);
         } else {
             newBefore[n] = before[n];
             newAfter[n] = after[n];
@@ -51,173 +49,205 @@ function printItem(color, item, i) {
         info.push('count: ' + item.count);
     }
 
-    console.log(
+    const text =
         (i + 1) + '. ' +
         newBefore.join('') + ' → ' +
         newAfter.join('') +
-        (info.length ? ' (' + info.join(', ') + ')' : '')
-    );
+        (info.length ? ' (' + info.join(', ') + ')' : '');
+
+    if (isError) {
+        console.error(text);
+    } else {
+        console.warn(text);
+    }
 }
 
-module.exports = {
-    /**
-     * Это ссылка?
-     *
-     * @param {string} path
-     * @returns {boolean}
-     */
-    isUrl(path) {
-        return path.search(/^https?:/) > -1;
-    },
+function printErrorItem(item, i) {
+    printItem(item, i, true);
+}
 
-    /**
-     * Развернуть glob-аргументы.
-     *
-     * @param {string[]} args
-     * @returns {string[]}
-     */
-    expandGlobArgs(args) {
-        let result = [];
+function printWarningItem(item, i) {
+    printItem(item, i, false);
+}
 
-        for (const value of args) {
-            if (this.isUrl(value)) {
-                result.push(value);
-            } else {
-                const files = glob.sync(value);
-                if (files) {
-                    result = result.concat(files);
-                }
-            }
-        }
+/**
+ * Это ссылка?
+ *
+ * @param {string} path
+ * @returns {boolean}
+ */
+function isUrl(path) {
+    return path.search(/^https?:/) > -1;
+}
 
-        return result;
-    },
-    /**
-     * Ёфицировать текст и вывести в консоль.
-     *
-     * @param {string} text
-     * @param {string} resource
-     */
-    _processText(text, resource) {
-        if (program.lint) {
-            this._lintText(text, resource);
+/**
+ * Развернуть glob-аргументы.
+ *
+ * @param {string[]} args
+ * @returns {string[]}
+ */
+function expandGlobArgs(args) {
+    let result = [];
+
+    for (const value of args) {
+        if (isUrl(value)) {
+            result.push(value);
         } else {
-            if (program.inPlace) {
-                try {
-                    const result = safeEyo.restore(text);
-                    fs.writeFileSync(resource, result);
-                } catch(e) {
-                    process.exitCode = exitCodes.CANT_WRITE;
-                    console.error(chalk.red(e));
-                }
-            } else {
-                process.stdout.write(safeEyo.restore(text));
+            const files = glob.sync(value);
+            if (files) {
+                result = result.concat(files);
             }
         }
-    },
-    /**
-     * Проверка текста.
-     *
-     * @param {string} text
-     * @param {string} resource
-     */
-    _lintText(text, resource) {
-        const n = isFirst ? '' : '\n';
-        const safeReplacement = safeEyo.lint(text, program.sort);
-        if (safeReplacement.length) {
-            console.log(n + chalk.red(errSym) + ' ' + resource);
-        } else {
-            console.log(n + chalk.green(okSym) + ' ' + resource);
-        }
+    }
 
-        if (safeReplacement.length) {
-            console.log(chalk.yellow('Safe replacements:'));
-            safeReplacement.forEach(printItem.bind(this, 'red'));
+    return result;
+}
 
-            if (!process.exitCode) {
-                process.exitCode = exitCodes.HAS_REPLACEMENT;
-            }
-        }
-
-        if (!program.onlySafe) {
-            const notSafeReplacement = notSafeEyo.lint(text, program.sort);
-            if (notSafeReplacement.length) {
-                console.log(chalk.red((notSafeReplacement.length ? '\n' : '') + 'Not safe replacements:'));
-                notSafeReplacement.forEach(printItem.bind(this, 'yellow'));
-            }
-        }
-
-        isFirst = false;
-    },
-    /**
-     * Ёфицировать файл.
-     *
-     * @param {string} file
-     * @param {Function} callback
-     */
-    _processFile(file, callback) {
-        if (this.isFile(file)) {
-            const buf = fs.readFileSync(file);
-            if (isutf8(buf)) {
-                this._processText(buf.toString('utf8'), file);
-            } else {
-                console.error(chalk.red(file + ': is not UTF-8.'));
-                process.exitCode = exitCodes.NOT_UTF8;
+/**
+ * Ёфицировать текст и вывести в консоль.
+ *
+ * @param {string} text
+ * @param {string} resource
+ */
+function processText(text, resource) {
+    if (program.lint) {
+        lintText(text, resource);
+    } else {
+        if (program.inPlace) {
+            try {
+                const result = safeEyo.restore(text);
+                fs.writeFileSync(resource, result);
+            } catch(e) {
+                process.exitCode = exitCodes.CANT_WRITE;
+                console.error(e);
             }
         } else {
-            console.error(chalk.red(file + ': no such file.'));
-            process.exitCode = exitCodes.NO_SUCH_FILE;
+            process.stdout.write(safeEyo.restore(text));
         }
+    }
+}
 
-        callback();
-    },
+/**
+ * Проверка текста.
+ *
+ * @param {string} text
+ * @param {string} resource
+ */
+function lintText(text, resource) {
+    const safeReplacement = safeEyo.lint(text, program.sort);
+    let notSafeReplacement = [];
 
-    /**
-     * Это файл?
-     *
-     * @param {string} file
-     * @returns {boolean}
-     */
-    isFile(file) {
-        return fs.existsSync(file) && fs.statSync(file).isFile();
-    },
+    if (!program.onlySafe) {
+        notSafeReplacement = notSafeEyo.lint(text, program.sort);
+    }
 
-    /**
-     * Ёфицировать страницу.
-     *
-     * @param {string} url
-     * @param {Function} callback
-     */
-    _processUrl(url, callback) {
-        request.get(
-            {url, gzip: true, encoding: null},
-            (error, res, buf) => {
+    if (safeReplacement.length) {
+        console.error(chalk.red(errorSymbol) + ' ' + resource);
+    } else if (notSafeReplacement.length) {
+        console.warn(chalk.yellow(warningSymbol) + ' ' + resource);
+    } else if (!program.onlySafe) {
+        console.log(chalk.green(okSymbol) + ' ' + resource);
+    }
+
+    if (safeReplacement.length) {
+        console.error(chalk.red('Safe replacements:'));
+        safeReplacement.forEach(printErrorItem);
+        console.error(chalk.red('---'));
+
+        if (!process.exitCode) {
+            process.exitCode = exitCodes.HAS_REPLACEMENT;
+        }
+    }
+
+    if (notSafeReplacement.length) {
+        console.warn(chalk.yellow('Not safe replacements:'));
+        notSafeReplacement.forEach(printWarningItem);
+        console.warn(chalk.yellow('---'));
+    }
+}
+
+/**
+ * Ёфицировать файл.
+ *
+ * @param {string} file
+ *
+ * @returns {Promise}
+ */
+function processFile(file) {
+    return new Promise((resolve, reject) => {
+        if (isFile(file)) {
+            fs.readFile(file, (error, buffer) => {
                 if (error) {
-                    console.log(chalk.red(error));
-                    process.exitCode = exitCodes.ERROR_LOADING;
-                }
-
-                if (res && res.statusCode !== 200) {
-                    console.log(chalk.red(`${url}: returns status code is ${res.statusCode}.`));
-                    process.exitCode = exitCodes.ERROR_LOADING;
-                    callback();
-
+                    reject(error);
                     return;
                 }
 
-                if (isutf8(buf)) {
-                    this._processText(buf.toString('utf8'), url);
+                if (isutf8(buffer)) {
+                    processText(buffer.toString('utf8'), file);
                 } else {
-                    const enc = charset(res.headers['content-type'], buf);
-                    if (iconv.encodingExists(enc)) {
-                        this._processText(iconv.decode(buf, enc), url);
-                    } else {
-                        console.error(enc + ': is unknown charset.');
-                        process.exitCode = exitCodes.UNKNOWN_CHARSET;
-                    }
+                    console.error(chalk.red(file + ': is not UTF-8.'));
+                    process.exitCode = exitCodes.NOT_UTF8;
                 }
 
-                callback();
+                resolve();
             });
+        } else {
+            console.error(chalk.red(file + ': no such file.'));
+            process.exitCode = exitCodes.NO_SUCH_FILE;
+
+            resolve();
+        }
+    });
+}
+
+/**
+ * Это файл?
+ *
+ * @param {string} file
+ * @returns {boolean}
+ */
+function isFile(file) {
+    return fs.existsSync(file) && fs.statSync(file).isFile();
+}
+
+/**
+ * Ёфицировать страницу.
+ *
+ * @param {string} url
+ */
+async function processUrl(url) {
+    try {
+        const response = await fetch(url);
+        const buffer = await response.buffer();
+
+        if (response.status !== 200) {
+            console.log(chalk.red(`${url}: returns status code is ${response.status}.`));
+            process.exitCode = exitCodes.ERROR_LOADING;
+
+            return;
+        }
+
+        if (isutf8(buffer)) {
+            processText(buffer.toString('utf8'), url);
+        } else {
+            const encoding = charset(response.headers.get('content-type'), buffer);
+            if (iconv.encodingExists(encoding)) {
+                processText(iconv.decode(buffer, encoding), url);
+            } else {
+                console.error(encoding + ': is unknown charset.');
+                process.exitCode = exitCodes.UNKNOWN_CHARSET;
+            }
+        }
+    } catch(error) {
+        console.log(chalk.red(error));
+        process.exitCode = exitCodes.ERROR_LOADING;
     }
+}
+
+module.exports = {
+    expandGlobArgs,
+    isUrl,
+    processFile,
+    processText,
+    processUrl,
 };

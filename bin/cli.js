@@ -5,7 +5,13 @@
 const chalk = require('chalk');
 const exit = require('exit');
 const program = require('commander');
-const utils = require('./utils');
+const {
+    expandGlobArgs,
+    isUrl,
+    processUrl,
+    processFile,
+    processText,
+} = require('./utils');
 
 program
     .version(require('../package.json').version)
@@ -37,19 +43,15 @@ if (program.stdin) {
             }
         })
         .on('end', () => {
-            utils._processText(text, program.stdinFilename || 'stdin');
+            processText(text, program.stdinFilename || 'stdin');
             exit(process.exitCode);
         });
 } else {
-    Promise.all(utils.expandGlobArgs(program.args).map(resource => {
-        return new Promise(resolve => {
-            if (utils.isUrl(resource)) {
-                utils._processUrl(resource, resolve);
-            } else {
-                utils._processFile(resource, resolve);
-            }
-        });
-    })).then(() => {
+    Promise.all(expandGlobArgs(program.args).map(resource =>
+        isUrl(resource) ?
+            processUrl(resource) :
+            processFile(resource)
+    )).then(() => {
         exit(process.exitCode);
     }).catch((e) => {
         console.error(chalk.red(e));
