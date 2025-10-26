@@ -4,9 +4,10 @@
 [![NPM downloads](https://img.shields.io/npm/dm/eyo.svg?style=flat)](https://www.npmjs.com/package/eyo)
 [![install size](https://packagephobia.com/badge?p=eyo)](https://packagephobia.com/result?p=eyo)
 
-<img src="https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png" align="right" alt="eyo" width="200" height="200" />
 
 ## Особенности
+<img src="https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png" align="right" alt="eyo" width="200" height="200" />
+
 + проверка и восстановление буквы «ё» в русских текстах, вместо написанной «е»;
 + замена «е» на «ё» только в бесспорных случаях;
 + исправление в словах нескольких букв «е», «ё»;
