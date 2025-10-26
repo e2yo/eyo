@@ -1,43 +1,44 @@
-'use strict';
+import { jest, describe, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
+import { program } from 'commander';
+import { processUrl } from '../lib/utils.mjs';
+import exitCodes from '../lib/exit-codes.mjs';
 
-const assert = require('chai').assert;
-const { processUrl } = require('../lib/utils');
-const exitCodes = require('../lib/exit-codes');
+jest.setTimeout(15000);
 
 describe('processUrl', function() {
-    this.timeout(15000);
-
-    const program = require('commander');
     const oldExitCode = process.exitCode;
-    const oldLint = program.lint;
+
+    const spy = jest.spyOn(program, 'opts').mockImplementation(() => ({ lint: true }));
+
+    afterAll(() => {
+        spy.mockRestore();
+    });
 
     beforeEach(() => {
-        program.lint = true;
         process.exitCode = oldExitCode;
     });
 
     afterEach(() => {
-        program.lint = oldLint;
         process.exitCode = oldExitCode;
     });
 
     it('should set exit code ERROR_LOADING', done => {
         processUrl('https://raw.githubusercontent.com/hcodes/utils/master/test/texts/unknown.txt').then(() => {
-            assert.equal(process.exitCode, exitCodes.ERROR_LOADING);
+            expect(process.exitCode).toEqual(exitCodes.ERROR_LOADING);
             done();
         });
     });
 
     it('should set exit code HAS_REPLACEMENT', done => {
         processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_with_yo.txt').then(() => {
-            assert.equal(process.exitCode, exitCodes.HAS_REPLACEMENT);
+            expect(process.exitCode).toEqual(exitCodes.HAS_REPLACEMENT);
             done();
         });
     });
 
     it('should not set exit code', done => {
         processUrl('https://raw.githubusercontent.com/hcodes/eyo/master/test/texts/example_without_yo.txt').then(() => {
-            assert.equal(process.exitCode, oldExitCode);
+            expect(process.exitCode).toEqual(oldExitCode);
             done();
         });
     });
