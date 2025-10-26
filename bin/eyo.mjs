@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import chalk from'chalk';
-import fs from 'node:fs';
 import { program } from 'commander';
 import {
     expandGlobArgs,
@@ -11,7 +10,9 @@ import {
     processText,
 } from '../lib/utils.mjs';
 
-const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { version } = require('../package.json');
 
 program.configureHelp({
   styleTitle: (str) => chalk.bold(str),
