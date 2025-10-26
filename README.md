@@ -2,9 +2,6 @@
 ===
 [![NPM version](https://img.shields.io/npm/v/eyo.svg?style=flat)](https://www.npmjs.com/package/eyo)
 [![NPM downloads](https://img.shields.io/npm/dm/eyo.svg?style=flat)](https://www.npmjs.com/package/eyo)
-[![Build Status](https://img.shields.io/travis/e2yo/eyo.svg?style=flat)](https://travis-ci.org/e2yo/eyo)
-[![Build Status](https://img.shields.io/appveyor/ci/hcodes/eyo/master.svg?style=flat)](https://ci.appveyor.com/project/hcodes/eyo)
-[![Coverage Status](https://img.shields.io/coveralls/e2yo/eyo.svg?style=flat)](https://coveralls.io/r/e2yo/eyo)
 [![install size](https://packagephobia.com/badge?p=eyo)](https://packagephobia.com/result?p=eyo)
 
 <img src="https://raw.githubusercontent.com/hcodes/eyo/master/images/logo.png" align="right" alt="eyo" width="200" height="200" />
