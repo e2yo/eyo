@@ -26,16 +26,17 @@ program.configureHelp({
 
 program
     .name('eyo')
-    .version(version, '-V, --version', 'output the version number')
+    .version(version, '-V, --version', 'Output the version number.')
+    .helpOption('-h, --help', 'Display help for command.')
     .usage('[options] <file-or-url...>\n\n  Restoring the letter “ё” (yo) in russian texts.')
-    .argument('[file-or-url...]', 'files or URLs to process')
-    .option('-l, --lint', 'Search of safe and unsafe replacements')
+    .argument('[file-or-url...]', 'Files or URLs to process.')
+    .option('-l, --lint', 'Search of safe and unsafe replacements.')
     .option('-i, --in-place', 'Write files in place.')
-    .option('-s, --sort', 'Sorting results by words with grouping')
-    .option('--only-safe', 'Output only safe replacements')
-    .option('--no-colors', 'Clean output without colors')
-    .option('--stdin', 'Process text provided on <STDIN>')
-    .option('--stdin-filename <file>', 'Specify filename to process STDIN as')
+    .option('-s, --sort', 'Sorting results by words with grouping.')
+    .option('--only-safe', 'Output only safe replacements.')
+    .option('--no-colors', 'Clean output without colors.')
+    .option('--stdin', 'Process text provided on <STDIN>.')
+    .option('--stdin-filename <file>', 'Specify filename to process STDIN as.')
     .action((files, options) => {
         chalk.enabled = options.colors;
 
